@@ -128,11 +128,21 @@ Config::define('DISALLOW_FILE_EDIT', true);
 // Disable plugin and theme updates and installation from the admin
 Config::define('DISALLOW_FILE_MODS', true);
 
-// Limit the number of post revisions
-Config::define('WP_POST_REVISIONS', env('WP_POST_REVISIONS') ?? true);
+// Limit the number of post revisions to improve database performance
+Config::define('WP_POST_REVISIONS', env('WP_POST_REVISIONS') ?? 3);
+
+// Increase autosave interval to reduce database writes (default is 60 seconds)
+Config::define('AUTOSAVE_INTERVAL', env('AUTOSAVE_INTERVAL') ?? 300);
 
 // Disable script concatenation
 Config::define('CONCATENATE_SCRIPTS', false);
+
+// Redis Object Cache configuration
+Config::define('WP_REDIS_HOST', env('REDIS_HOST') ?: 'redis');
+Config::define('WP_REDIS_PORT', env('REDIS_PORT') ?: 6379);
+Config::define('WP_REDIS_DATABASE', env('REDIS_DATABASE') ?: 0);
+Config::define('WP_REDIS_TIMEOUT', 1);
+Config::define('WP_REDIS_READ_TIMEOUT', 1);
 
 /**
  * Debugging Settings

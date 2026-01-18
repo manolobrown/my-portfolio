@@ -162,7 +162,8 @@
 							],
 							"fontWeight": "200 800",
 							"fontStyle": "normal",
-							"fontFamily": "Manrope"
+							"fontFamily": "Manrope",
+							"fontDisplay": "swap"
 						}
 					]
 				},
@@ -177,7 +178,8 @@
 							],
 							"fontWeight": "300 700",
 							"fontStyle": "normal",
-							"fontFamily": "\"Fira Code\""
+							"fontFamily": "\"Fira Code\"",
+							"fontDisplay": "swap"
 						}
 					]
 				}

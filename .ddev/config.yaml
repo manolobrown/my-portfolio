@@ -9,7 +9,7 @@ additional_fqdns: []
 database:
     type: mariadb
     version: "10.11"
-performance_mode: mutagen
+performance_mode: none
 use_dns_when_possible: true
 composer_version: "2"
 web_environment: []

@@ -58,3 +58,14 @@ web/app/cache/
 # --------------------------------------
 coverage/
 .phpunit.result.cache
+
+# WordPress plugins (managed by Composer)
+web/app/plugins/
+web/app/mu-plugins/
+web/app/object-cache.php
+
+# DDEV generated files
+.ddev/nginx_full/nginx-site.conf
+
+# npm lock files (using yarn)
+package-lock.json

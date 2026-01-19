@@ -18,14 +18,41 @@ class Post extends Composer
     ];
 
     /**
-     * Retrieve the post title.
+     * Cache duration in seconds (5 minutes).
+     *
+     * @var int
+     */
+    protected $cache_duration = 300;
+
+    /**
+     * Retrieve the post title with caching.
      */
     public function title(): string
     {
+        // Don't cache individual post titles, only expensive archive queries
         if ($this->view->name() !== 'partials.page-header') {
             return get_the_title();
         }
 
+        $cache_key = $this->getCacheKey('title');
+        $cached = wp_cache_get($cache_key, 'sage_post_composer');
+
+        if ($cached !== false) {
+            return $cached;
+        }
+
+        $title = $this->computeTitle();
+
+        wp_cache_set($cache_key, $title, 'sage_post_composer', $this->cache_duration);
+
+        return $title;
+    }
+
+    /**
+     * Compute the post title based on context.
+     */
+    protected function computeTitle(): string
+    {
         if (is_home()) {
             if ($home = get_option('page_for_posts', true)) {
                 return get_the_title($home);
@@ -54,14 +81,55 @@ class Post extends Composer
     }
 
     /**
-     * Retrieve the pagination links.
+     * Retrieve the pagination links with caching.
      */
     public function pagination(): string
     {
-        return wp_link_pages([
+        $post_id = get_the_ID();
+
+        if (!$post_id) {
+            return '';
+        }
+
+        $cache_key = "pagination_{$post_id}_" . (get_query_var('page') ?: 1);
+        $cached = wp_cache_get($cache_key, 'sage_post_composer');
+
+        if ($cached !== false) {
+            return $cached;
+        }
+
+        $pagination = wp_link_pages([
             'echo' => 0,
             'before' => '<p>'.__('Pages:', 'sage'),
             'after' => '</p>',
         ]);
+
+        wp_cache_set($cache_key, $pagination, 'sage_post_composer', $this->cache_duration);
+
+        return $pagination;
+    }
+
+    /**
+     * Generate a cache key based on current context.
+     */
+    protected function getCacheKey(string $prefix): string
+    {
+        $parts = [$prefix];
+
+        if (is_home()) {
+            $parts[] = 'home';
+        } elseif (is_archive()) {
+            $parts[] = 'archive';
+            $parts[] = get_queried_object_id();
+        } elseif (is_search()) {
+            $parts[] = 'search';
+            $parts[] = md5(get_search_query());
+        } elseif (is_404()) {
+            $parts[] = '404';
+        } else {
+            $parts[] = get_the_ID();
+        }
+
+        return implode('_', $parts);
     }
 }

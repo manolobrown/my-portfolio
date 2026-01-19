@@ -67,27 +67,6 @@ if ( ! function_exists( 'twentytwentyfive_enqueue_styles' ) ) :
 endif;
 add_action( 'wp_enqueue_scripts', 'twentytwentyfive_enqueue_styles' );
 
-// Preloads critical assets for improved performance.
-if ( ! function_exists( 'twentytwentyfive_preload_resources' ) ) :
-	/**
-	 * Preloads critical assets to improve page load performance.
-	 *
-	 * @since Twenty Twenty-Five 1.0
-	 *
-	 * @return void
-	 */
-	function twentytwentyfive_preload_resources() {
-		// Preload the main variable fonts
-		echo '<link rel="preload" href="' . get_theme_file_uri( 'assets/fonts/manrope/Manrope-VariableFont_wght.woff2' ) . '" as="font" type="font/woff2" crossorigin>';
-		echo '<link rel="preload" href="' . get_theme_file_uri( 'assets/fonts/fira-code/FiraCode-VariableFont_wght.woff2' ) . '" as="font" type="font/woff2" crossorigin>';
-
-		// Preload the main stylesheet
-		$suffix = SCRIPT_DEBUG ? '' : '.min';
-		echo '<link rel="preload" href="' . get_theme_file_uri( 'style' . $suffix . '.css' ) . '" as="style">';
-	}
-endif;
-add_action( 'wp_head', 'twentytwentyfive_preload_resources', 1 );
-
 // Registers custom block styles.
 if ( ! function_exists( 'twentytwentyfive_block_styles' ) ) :
 	/**
